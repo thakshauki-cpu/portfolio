@@ -1,0 +1,2087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THAKSHA SASIKUMAR — Code. Create. Secure.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #ff0033;
+  --red-dim: #7a0018;
+  --orange: #ff4500;
+  --yellow: #ffcc00;
+  --blue: #00aaff;
+  --blue-dark: #003366;
+  --cyan: #00ffff;
+  --green: #00ff88;
+  --green-dark: #003322;
+  --neon-green: #39ff14;
+  --purple: #9d00ff;
+  --dark: #02040a;
+  --dark2: #060c14;
+  --glass: rgba(0,170,255,0.06);
+  --glass-border: rgba(0,170,255,0.15);
+  --font-mono: 'Share Tech Mono', monospace;
+  --font-display: 'Orbitron', monospace;
+  --font-body: 'Rajdhani', sans-serif;
+  --font-code: 'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--dark);
+  color: #cdd6e0;
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── CUSTOM CURSOR ── */
+#cursor {
+  width: 12px; height: 12px;
+  background: var(--cyan);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: transform 0.1s, background 0.3s;
+  box-shadow: 0 0 12px var(--cyan), 0 0 30px rgba(0,255,255,0.3);
+}
+#cursor-ring {
+  width: 36px; height: 36px;
+  border: 1px solid rgba(0,255,255,0.4);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: all 0.15s ease;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #010509; }
+::-webkit-scrollbar-thumb { background: var(--cyan); border-radius: 2px; }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1rem 3rem;
+  background: rgba(2,4,10,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0,255,255,0.1);
+  transition: all 0.5s;
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  color: var(--cyan);
+  text-shadow: 0 0 20px var(--cyan);
+}
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: rgba(0,255,255,0.6);
+  text-decoration: none;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  transition: color 0.3s, text-shadow 0.3s;
+}
+.nav-links a:hover { color: var(--cyan); text-shadow: 0 0 10px var(--cyan); }
+.nav-status {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-family: var(--font-mono); font-size: 0.65rem;
+  color: var(--red);
+}
+.status-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--red);
+  animation: blink 1s infinite;
+  box-shadow: 0 0 8px var(--red);
+}
+.status-dot.secure { background: var(--green); box-shadow: 0 0 8px var(--green); animation: none; }
+
+/* ── SECTIONS ── */
+section { position: relative; overflow: hidden; }
+
+/* ── PHASE 1: DANGER ZONE ── */
+#phase1 {
+  min-height: 100vh;
+  background: #000;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  padding: 80px 2rem 2rem;
+  position: relative;
+}
+
+/* Particle canvas covers full phase1 */
+#danger-canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+}
+
+/* Red scan line overlay */
+#phase1::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,0,51,0.02) 2px, rgba(255,0,51,0.02) 4px);
+  pointer-events: none; z-index: 2;
+  animation: scanlines 8s linear infinite;
+}
+
+@keyframes scanlines { 0%{background-position:0 0} 100%{background-position:0 100px} }
+
+.danger-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem; width: 100%; max-width: 1200px;
+  position: relative; z-index: 3;
+  margin-bottom: 3rem;
+}
+
+.breach-card {
+  background: rgba(255,0,51,0.07);
+  border: 1px solid rgba(255,0,51,0.3);
+  border-radius: 4px;
+  padding: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: #ff6677;
+  animation: cardGlitch 3s infinite;
+  position: relative;
+  overflow: hidden;
+}
+
+.breach-card::before {
+  content: '';
+  position: absolute; top: 0; left: -100%;
+  width: 100%; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--red), transparent);
+  animation: scanCard 2s linear infinite;
+}
+
+@keyframes scanCard { 0%{left:-100%} 100%{left:100%} }
+
+.breach-card .card-title {
+  color: var(--red); font-size: 0.75rem;
+  display: flex; align-items: center; gap: 0.4rem;
+  margin-bottom: 0.5rem; font-weight: bold;
+}
+.breach-card .card-title::before { content: '⚠'; animation: blink 0.7s infinite; }
+
+@keyframes cardGlitch {
+  0%,92%,100%{transform:none;filter:none}
+  93%{transform:translateX(2px);filter:hue-rotate(90deg)}
+  94%{transform:translateX(-2px);}
+  95%{transform:none}
+}
+
+.attack-log {
+  position: relative; z-index: 3;
+  background: rgba(0,0,0,0.8);
+  border: 1px solid rgba(255,0,51,0.4);
+  border-radius: 4px;
+  padding: 1.5rem;
+  width: 100%; max-width: 1200px;
+  font-family: var(--font-code);
+  font-size: 0.7rem;
+  max-height: 200px;
+  overflow: hidden;
+  margin-bottom: 3rem;
+}
+.attack-log .log-header {
+  color: var(--red); margin-bottom: 0.5rem;
+  font-size: 0.65rem; letter-spacing: 0.1em;
+  display: flex; justify-content: space-between;
+}
+.log-line { color: #ff4466; margin: 0.2rem 0; animation: fadeInLine 0.5s ease; }
+.log-line.warn { color: var(--yellow); }
+.log-line.critical { color: var(--red); font-weight: bold; animation: blink 0.5s infinite; }
+
+.hero-danger {
+  position: relative; z-index: 3;
+  text-align: center;
+}
+.hero-danger h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 6vw, 5rem);
+  font-weight: 900;
+  color: var(--red);
+  text-shadow: 0 0 30px var(--red), 0 0 60px rgba(255,0,51,0.5);
+  letter-spacing: 0.1em;
+  animation: textGlitch 4s infinite;
+  line-height: 1.1;
+}
+.hero-danger .sub {
+  font-family: var(--font-mono);
+  font-size: clamp(0.8rem, 2vw, 1rem);
+  color: rgba(255,100,100,0.7);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-top: 1rem;
+}
+
+@keyframes textGlitch {
+  0%,89%,100%{clip-path:none;transform:none;filter:none}
+  90%{clip-path:polygon(0 30%,100% 30%,100% 50%,0 50%);transform:translateX(-4px);filter:hue-rotate(90deg)}
+  91%{clip-path:polygon(0 60%,100% 60%,100% 80%,0 80%);transform:translateX(4px)}
+  92%{clip-path:none;transform:none}
+}
+
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+@keyframes fadeInLine { from{opacity:0;transform:translateY(-5px)} to{opacity:1;transform:none} }
+
+/* Scroll indicator */
+.scroll-hint {
+  position: relative; z-index: 3;
+  margin-top: 3rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: rgba(255,100,100,0.5);
+  text-align: center;
+  letter-spacing: 0.2em;
+  animation: pulse 2s infinite;
+}
+.scroll-arrow {
+  display: block; text-align: center;
+  font-size: 1.5rem; color: var(--red);
+  margin-top: 0.5rem;
+  animation: bounce 1.5s infinite;
+}
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
+@keyframes pulse { 0%,100%{opacity:0.5} 50%{opacity:1} }
+
+/* ── PHASE 2: BUILDER ZONE ── */
+#phase2 {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #000 0%, #010916 30%, #010b1e 100%);
+  padding: 6rem 2rem;
+  position: relative;
+}
+
+#matrix-canvas {
+  position: absolute; inset: 0; opacity: 0.08; pointer-events: none;
+}
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--blue);
+  text-align: center;
+  margin-bottom: 1rem;
+  opacity: 0.7;
+}
+
+.phase-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 5vw, 3.5rem);
+  font-weight: 900;
+  text-align: center;
+  letter-spacing: 0.05em;
+  margin-bottom: 4rem;
+}
+.phase-title .accent { color: var(--cyan); text-shadow: 0 0 30px var(--cyan); }
+
+.builder-grid {
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 3rem; align-items: start;
+}
+
+/* Profile card */
+.profile-card {
+  background: rgba(0,170,255,0.04);
+  border: 1px solid rgba(0,170,255,0.15);
+  border-radius: 16px;
+  padding: 2.5rem;
+  backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+}
+.profile-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  animation: scanCard 3s linear infinite;
+}
+
+.profile-avatar {
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue-dark), var(--blue));
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-size: 2.5rem; font-weight: 900;
+  color: var(--cyan);
+  text-shadow: 0 0 20px var(--cyan);
+  border: 2px solid rgba(0,255,255,0.3);
+  box-shadow: 0 0 40px rgba(0,170,255,0.2);
+  margin-bottom: 1.5rem;
+}
+
+.profile-name {
+  font-family: var(--font-display);
+  font-size: 1.8rem; font-weight: 900;
+  color: #fff;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.3rem;
+}
+
+.profile-roles {
+  display: flex; flex-wrap: wrap; gap: 0.5rem;
+  margin: 1rem 0 1.5rem;
+}
+.role-tag {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid rgba(0,255,255,0.3);
+  border-radius: 20px;
+  color: var(--cyan);
+  background: rgba(0,255,255,0.05);
+}
+
+.profile-info { font-family: var(--font-mono); font-size: 0.7rem; }
+.info-row {
+  display: flex; gap: 1rem; align-items: center;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(0,170,255,0.08);
+  color: rgba(200,220,255,0.7);
+}
+.info-row .key { color: var(--cyan); min-width: 80px; }
+.info-row a { color: var(--blue); text-decoration: none; transition: color 0.3s; }
+.info-row a:hover { color: var(--cyan); }
+
+/* Code terminal */
+.code-terminal {
+  background: #0a0e1a;
+  border: 1px solid rgba(0,170,255,0.2);
+  border-radius: 12px;
+  overflow: hidden;
+  font-family: var(--font-code);
+  font-size: 0.75rem;
+}
+.terminal-header {
+  background: rgba(0,170,255,0.08);
+  padding: 0.75rem 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+  border-bottom: 1px solid rgba(0,170,255,0.1);
+}
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot.red{background:#ff5f57} .dot.yellow{background:#febc2e} .dot.green{background:#28c840}
+.terminal-title { font-family: var(--font-mono); font-size: 0.65rem; color: rgba(0,255,255,0.5); margin-left: auto; }
+.terminal-body { padding: 1.5rem; line-height: 1.8; }
+.t-comment { color: #3a5a7a; }
+.t-key { color: #79b8ff; }
+.t-str { color: #9ecbff; }
+.t-cyan { color: var(--cyan); }
+.t-green { color: var(--green); }
+.t-yellow { color: var(--yellow); }
+.t-purple { color: #d2a8ff; }
+.t-red { color: var(--red); }
+.cursor-blink::after { content: '|'; animation: blink 1s infinite; color: var(--cyan); }
+
+/* Skills galaxy */
+.skills-section {
+  max-width: 1200px; margin: 5rem auto 0;
+  position: relative; z-index: 1;
+}
+.skills-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem; letter-spacing: 0.2em;
+  color: var(--cyan); text-align: center;
+  margin-bottom: 2.5rem;
+}
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+}
+.skill-orb {
+  background: rgba(0,170,255,0.05);
+  border: 1px solid rgba(0,170,255,0.2);
+  border-radius: 12px;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  transition: all 0.3s;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+.skill-orb::before {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--cyan);
+  transform: scaleX(0);
+  transition: transform 0.3s;
+  transform-origin: left;
+}
+.skill-orb:hover {
+  background: rgba(0,255,255,0.08);
+  border-color: rgba(0,255,255,0.5);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 40px rgba(0,170,255,0.15);
+}
+.skill-orb:hover::before { transform: scaleX(1); }
+.skill-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+.skill-name {
+  font-family: var(--font-mono);
+  font-size: 0.65rem; letter-spacing: 0.1em;
+  color: rgba(200,220,255,0.7);
+  text-transform: uppercase;
+}
+.skill-level {
+  margin-top: 0.5rem;
+  height: 2px; background: rgba(0,255,255,0.1);
+  border-radius: 1px; overflow: hidden;
+}
+.skill-fill {
+  height: 100%; background: linear-gradient(90deg, var(--blue), var(--cyan));
+  border-radius: 1px;
+  transition: width 1s ease;
+}
+
+/* ── PHASE 3: ROADMAP ── */
+#phase3 {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #010b1e 0%, #010a18 100%);
+  padding: 6rem 2rem;
+  position: relative;
+}
+
+.roadmap {
+  max-width: 900px; margin: 0 auto;
+  position: relative;
+}
+.roadmap::before {
+  content: '';
+  position: absolute; left: 120px; top: 0; bottom: 0; width: 2px;
+  background: linear-gradient(180deg, rgba(0,170,255,0.5), rgba(0,255,255,0.2), rgba(57,255,20,0.3));
+}
+
+.roadmap-item {
+  display: flex; gap: 2rem; margin-bottom: 2.5rem;
+  position: relative; align-items: flex-start;
+  opacity: 0; transform: translateX(-20px);
+  transition: all 0.6s ease;
+}
+.roadmap-item.visible { opacity: 1; transform: none; }
+
+.month-badge {
+  min-width: 110px;
+  font-family: var(--font-mono); font-size: 0.65rem;
+  color: rgba(0,255,255,0.6); text-align: right;
+  padding-top: 1rem;
+  letter-spacing: 0.05em;
+}
+
+.roadmap-node {
+  min-width: 24px; height: 24px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem;
+  margin-top: 0.7rem;
+  position: relative; z-index: 1;
+  flex-shrink: 0;
+}
+.roadmap-node.done {
+  background: rgba(0,255,136,0.2);
+  border: 2px solid var(--green);
+  box-shadow: 0 0 15px rgba(0,255,136,0.5);
+}
+.roadmap-node.active {
+  background: rgba(0,170,255,0.2);
+  border: 2px solid var(--blue);
+  box-shadow: 0 0 15px rgba(0,170,255,0.5);
+  animation: pulse 2s infinite;
+}
+.roadmap-node.upcoming {
+  background: rgba(100,100,120,0.2);
+  border: 2px solid rgba(100,100,120,0.4);
+}
+
+.roadmap-content {
+  background: rgba(0,170,255,0.04);
+  border: 1px solid rgba(0,170,255,0.12);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  flex: 1;
+}
+.roadmap-content.done { border-color: rgba(0,255,136,0.2); background: rgba(0,255,136,0.03); }
+.roadmap-content.active { border-color: rgba(0,170,255,0.3); }
+
+.rm-month {
+  font-family: var(--font-display); font-size: 0.7rem;
+  color: var(--cyan); letter-spacing: 0.15em;
+  margin-bottom: 0.3rem;
+}
+.rm-month.done { color: var(--green); }
+
+.rm-topics {
+  font-family: var(--font-body); font-size: 0.95rem;
+  font-weight: 600; color: rgba(200,220,255,0.9);
+  margin-bottom: 0.5rem;
+}
+
+.progress-bar {
+  height: 3px; background: rgba(0,0,0,0.3);
+  border-radius: 2px; overflow: hidden; margin-top: 0.8rem;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--green), #00ffaa);
+  width: 0;
+  transition: width 1.5s ease 0.3s;
+}
+.progress-fill.blue { background: linear-gradient(90deg, var(--blue), var(--cyan)); }
+
+/* ── PHASE 4: CREATOR ZONE ── */
+#phase4 {
+  min-height: 70vh;
+  background: linear-gradient(180deg, #010a18 0%, #08061a 100%);
+  padding: 6rem 2rem;
+}
+
+.creator-grid {
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 3rem; align-items: center;
+}
+
+.timeline-editor {
+  background: #0d0b1e;
+  border: 1px solid rgba(157,0,255,0.2);
+  border-radius: 12px;
+  overflow: hidden;
+  font-family: var(--font-code); font-size: 0.7rem;
+}
+.tl-header {
+  background: rgba(157,0,255,0.08);
+  padding: 0.8rem 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+  border-bottom: 1px solid rgba(157,0,255,0.15);
+  font-family: var(--font-mono); font-size: 0.65rem;
+  color: rgba(157,0,255,0.7);
+}
+.tl-body { padding: 1.5rem; }
+.tl-track { margin-bottom: 1rem; }
+.tl-track-name {
+  font-family: var(--font-mono); font-size: 0.6rem;
+  color: rgba(200,180,255,0.5); margin-bottom: 0.3rem;
+  letter-spacing: 0.1em;
+}
+.tl-clips {
+  display: flex; gap: 4px; height: 20px;
+}
+.tl-clip {
+  border-radius: 2px; height: 100%;
+  position: relative; overflow: hidden;
+  animation: clipPulse 3s ease infinite;
+}
+.tl-clip::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, rgba(255,255,255,0.1), transparent);
+}
+@keyframes clipPulse { 0%,100%{opacity:1} 50%{opacity:0.7} }
+
+.creator-skills { }
+.creator-skill-item {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1rem;
+  background: rgba(157,0,255,0.05);
+  border: 1px solid rgba(157,0,255,0.15);
+  border-radius: 10px;
+  margin-bottom: 0.8rem;
+  transition: all 0.3s;
+}
+.creator-skill-item:hover {
+  background: rgba(157,0,255,0.1);
+  border-color: rgba(157,0,255,0.4);
+  transform: translateX(5px);
+}
+.cs-icon { font-size: 1.5rem; }
+.cs-info { flex: 1; }
+.cs-name {
+  font-family: var(--font-body); font-weight: 600;
+  color: rgba(220,200,255,0.9); font-size: 0.95rem;
+}
+.cs-desc {
+  font-family: var(--font-mono); font-size: 0.6rem;
+  color: rgba(157,0,255,0.6); letter-spacing: 0.05em;
+}
+
+/* ── PHASE 5: AWAKENING ── */
+#phase5 {
+  min-height: 80vh;
+  background: linear-gradient(180deg, #08061a 0%, #020d12 100%);
+  padding: 6rem 2rem;
+  position: relative; overflow: hidden;
+}
+
+#awakening-canvas {
+  position: absolute; inset: 0; pointer-events: none;
+}
+
+.awakening-center {
+  max-width: 900px; margin: 0 auto;
+  text-align: center; position: relative; z-index: 2;
+}
+
+.awakening-quote {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  line-height: 1.3;
+  color: #fff;
+  margin-bottom: 4rem;
+}
+.awakening-quote .aq-line1 { color: var(--blue); text-shadow: 0 0 30px var(--blue); }
+.awakening-quote .aq-line2 { color: var(--cyan); text-shadow: 0 0 30px var(--cyan); }
+.awakening-quote .aq-line3 { color: var(--neon-green); text-shadow: 0 0 30px var(--neon-green); }
+
+.security-concepts {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem; margin-top: 3rem;
+}
+
+.sec-concept {
+  background: rgba(0,255,136,0.04);
+  border: 1px solid rgba(0,255,136,0.15);
+  border-radius: 10px;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  transition: all 0.4s;
+  position: relative; overflow: hidden;
+}
+.sec-concept::before {
+  content: '';
+  position: absolute; top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle, rgba(0,255,136,0.05), transparent 60%);
+  opacity: 0; transition: opacity 0.4s;
+}
+.sec-concept:hover { border-color: rgba(57,255,20,0.5); transform: translateY(-4px); }
+.sec-concept:hover::before { opacity: 1; }
+.sec-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+.sec-name {
+  font-family: var(--font-mono); font-size: 0.65rem;
+  color: var(--green); letter-spacing: 0.1em; text-transform: uppercase;
+}
+
+/* ── PHASE 6: CYBER DEFENSE ── */
+#phase6 {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #020d12 0%, #00100a 30%, #000b06 100%);
+  padding: 6rem 2rem;
+  position: relative;
+}
+
+#secure-canvas {
+  position: absolute; inset: 0; pointer-events: none; opacity: 0.3;
+}
+
+.defense-grid {
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.5rem; margin-bottom: 4rem;
+}
+
+.defense-card {
+  background: rgba(0,255,136,0.04);
+  border: 1px solid rgba(0,255,136,0.15);
+  border-radius: 12px; padding: 1.5rem;
+  position: relative; overflow: hidden;
+  transition: all 0.3s;
+}
+.defense-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--green), transparent);
+  animation: scanCard 3s linear infinite;
+}
+.defense-card:hover {
+  border-color: rgba(0,255,136,0.4);
+  box-shadow: 0 0 30px rgba(0,255,136,0.1);
+}
+.dc-status {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-family: var(--font-mono); font-size: 0.6rem;
+  color: var(--green); margin-bottom: 0.8rem;
+}
+.dc-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--green); box-shadow: 0 0 8px var(--green);
+}
+.dc-title {
+  font-family: var(--font-body); font-weight: 600; font-size: 1rem;
+  color: rgba(200,255,230,0.9); margin-bottom: 0.4rem;
+}
+.dc-value {
+  font-family: var(--font-mono); font-size: 1.5rem;
+  color: var(--green); text-shadow: 0 0 15px var(--green);
+}
+
+/* Firewall */
+.firewall-vis {
+  max-width: 900px; margin: 0 auto 4rem;
+  background: rgba(0,0,0,0.5);
+  border: 1px solid rgba(0,255,136,0.2);
+  border-radius: 12px; padding: 2rem;
+  font-family: var(--font-code); font-size: 0.7rem;
+}
+.fw-header {
+  color: var(--green); margin-bottom: 1rem;
+  font-size: 0.65rem; letter-spacing: 0.15em;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.fw-line { margin: 0.2rem 0; }
+.fw-blocked { color: var(--green); }
+.fw-allow { color: var(--blue); }
+
+/* Final identity */
+.final-identity {
+  text-align: center; position: relative; z-index: 2;
+  padding: 4rem 2rem;
+}
+
+.fi-tagline {
+  font-family: var(--font-mono); font-size: 0.7rem;
+  letter-spacing: 0.4em; color: var(--green);
+  margin-bottom: 1.5rem; opacity: 0.7;
+}
+
+.fi-name {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 7vw, 5.5rem);
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  color: #fff;
+  text-shadow: 0 0 60px rgba(0,255,136,0.3);
+  margin-bottom: 0.5rem;
+}
+
+.fi-roles {
+  font-family: var(--font-body); font-size: 1.2rem;
+  color: rgba(0,255,136,0.7); letter-spacing: 0.1em;
+  margin-bottom: 2rem;
+}
+
+.fi-ccc {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  font-weight: 900;
+  letter-spacing: 0.3em;
+  background: linear-gradient(90deg, var(--blue), var(--cyan), var(--neon-green));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 3rem;
+}
+
+.build-defend {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  font-weight: 700;
+  color: rgba(200,255,230,0.6);
+  letter-spacing: 0.1em;
+  line-height: 1.6;
+  margin-bottom: 3rem;
+}
+.build-defend span { color: var(--neon-green); text-shadow: 0 0 20px var(--neon-green); }
+
+/* CTA buttons */
+.cta-row {
+  display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+  margin-bottom: 4rem;
+}
+.btn {
+  font-family: var(--font-display); font-size: 0.7rem;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  padding: 0.9rem 2rem;
+  border-radius: 4px;
+  border: none; cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+}
+.btn-primary {
+  background: transparent;
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  box-shadow: 0 0 20px rgba(0,255,255,0.1);
+}
+.btn-primary:hover {
+  background: rgba(0,255,255,0.1);
+  box-shadow: 0 0 40px rgba(0,255,255,0.3);
+  transform: translateY(-2px);
+}
+.btn-secondary {
+  background: rgba(0,255,136,0.1);
+  border: 1px solid var(--green);
+  color: var(--green);
+}
+.btn-secondary:hover {
+  background: rgba(0,255,136,0.2);
+  box-shadow: 0 0 30px rgba(0,255,136,0.2);
+  transform: translateY(-2px);
+}
+
+/* ── TERMINAL INTERACTIVE ── */
+#terminal-section {
+  background: #000;
+  padding: 4rem 2rem;
+  border-top: 1px solid rgba(0,255,136,0.1);
+  border-bottom: 1px solid rgba(0,255,136,0.1);
+}
+.interactive-terminal {
+  max-width: 800px; margin: 0 auto;
+  background: #040a0a;
+  border: 1px solid rgba(0,255,136,0.2);
+  border-radius: 12px; overflow: hidden;
+}
+.it-header {
+  background: rgba(0,255,136,0.05);
+  padding: 0.8rem 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+  border-bottom: 1px solid rgba(0,255,136,0.1);
+}
+.it-title { font-family: var(--font-mono); font-size: 0.65rem; color: var(--green); margin-left: auto; }
+.it-body {
+  padding: 1.5rem;
+  font-family: var(--font-code); font-size: 0.75rem;
+  min-height: 200px; max-height: 300px; overflow-y: auto;
+}
+.it-output { color: rgba(0,255,136,0.8); margin: 0.2rem 0; }
+.it-input-row {
+  display: flex; align-items: center; gap: 0.5rem;
+  border-top: 1px solid rgba(0,255,136,0.1);
+  padding: 0.8rem 1rem;
+}
+.it-prompt { color: var(--green); font-family: var(--font-code); font-size: 0.75rem; }
+.it-input {
+  flex: 1; background: transparent; border: none; outline: none;
+  color: var(--green); font-family: var(--font-code); font-size: 0.75rem;
+  caret-color: var(--green);
+}
+
+/* ── CONTACT FORM ── */
+#contact {
+  padding: 5rem 2rem;
+  background: #000;
+}
+.contact-container {
+  max-width: 700px; margin: 0 auto;
+}
+.form-group { margin-bottom: 1.5rem; }
+.form-label {
+  display: block; font-family: var(--font-mono);
+  font-size: 0.65rem; letter-spacing: 0.15em;
+  color: var(--cyan); margin-bottom: 0.5rem;
+}
+.form-input, .form-textarea {
+  width: 100%; background: rgba(0,170,255,0.04);
+  border: 1px solid rgba(0,170,255,0.2); border-radius: 6px;
+  padding: 0.8rem 1rem;
+  font-family: var(--font-body); font-size: 0.95rem;
+  color: rgba(200,220,255,0.9);
+  outline: none; transition: all 0.3s;
+}
+.form-input:focus, .form-textarea:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 20px rgba(0,255,255,0.1);
+  background: rgba(0,255,255,0.03);
+}
+.form-textarea { resize: vertical; min-height: 120px; }
+
+/* ── FOOTER ── */
+footer {
+  padding: 2rem;
+  text-align: center;
+  font-family: var(--font-mono); font-size: 0.6rem;
+  color: rgba(0,255,136,0.3);
+  border-top: 1px solid rgba(0,255,136,0.08);
+  letter-spacing: 0.15em;
+}
+
+/* ── SCROLL REVEAL ── */
+.reveal {
+  opacity: 0; transform: translateY(30px);
+  transition: all 0.8s ease;
+}
+.reveal.visible { opacity: 1; transform: none; }
+
+/* ── GLITCH OVERLAY ── */
+.glitch-overlay {
+  position: fixed; inset: 0; pointer-events: none; z-index: 500;
+  opacity: 0; transition: opacity 0.3s;
+}
+.glitch-overlay.active { opacity: 1; }
+.glitch-stripe {
+  position: absolute; left: 0; right: 0;
+  height: 3px; background: rgba(255,0,51,0.6);
+  animation: glitchStripe 0.1s linear;
+}
+@keyframes glitchStripe {
+  0%{transform:scaleX(0.3) translateX(-100%)} 100%{transform:scaleX(1.5) translateX(100%)}
+}
+
+/* ── PROGRESS BAR (page scroll) ── */
+#scroll-progress {
+  position: fixed; top: 0; left: 0; height: 2px;
+  background: linear-gradient(90deg, var(--red), var(--blue), var(--green));
+  z-index: 9997; transition: width 0.1s;
+  box-shadow: 0 0 10px currentColor;
+}
+
+/* Responsive */
+@media(max-width:768px){
+  .builder-grid, .creator-grid, .defense-grid { grid-template-columns: 1fr; }
+  .roadmap::before { left: 70px; }
+  .month-badge { min-width: 60px; font-size: 0.55rem; }
+  nav { padding: 1rem; }
+  .nav-links { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- Scroll progress -->
+<div id="scroll-progress"></div>
+
+<!-- Glitch overlay -->
+<div class="glitch-overlay" id="glitch-overlay"></div>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <div class="nav-logo">TS://PORTFOLIO</div>
+  <ul class="nav-links">
+    <li><a href="#phase1">DANGER</a></li>
+    <li><a href="#phase2">BUILDER</a></li>
+    <li><a href="#phase3">JOURNEY</a></li>
+    <li><a href="#phase4">CREATOR</a></li>
+    <li><a href="#phase5">AWAKENING</a></li>
+    <li><a href="#phase6">DEFENSE</a></li>
+    <li><a href="#contact">CONTACT</a></li>
+  </ul>
+  <div class="nav-status">
+    <div class="status-dot" id="nav-status-dot"></div>
+    <span id="nav-status-text">BREACH DETECTED</span>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PHASE 1: DANGER ZONE -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="phase1">
+  <canvas id="danger-canvas"></canvas>
+
+  <div class="breach-grid-wrapper" style="width:100%;max-width:1200px;position:relative;z-index:3">
+    <div class="danger-grid">
+      <div class="breach-card">
+        <div class="card-title">SERVER BREACH</div>
+        <div>ROOT ACCESS GAINED</div>
+        <div style="color:#ff2244;margin-top:4px">172.16.0.1 ← ATTACKER</div>
+        <div style="color:#7a0018;margin-top:4px;font-size:0.6rem">ESCALATING PRIVILEGES...</div>
+      </div>
+      <div class="breach-card">
+        <div class="card-title">DATA LEAK DETECTED</div>
+        <div>DATABASE: 2.4M RECORDS</div>
+        <div style="color:#ff2244;margin-top:4px">EXFILTRATING... 89%</div>
+        <div style="background:rgba(255,0,51,0.2);height:4px;border-radius:2px;margin-top:6px;overflow:hidden">
+          <div style="width:89%;height:100%;background:var(--red);animation:pulse 0.5s infinite"></div>
+        </div>
+      </div>
+      <div class="breach-card">
+        <div class="card-title">RANSOMWARE ACTIVE</div>
+        <div>FILES ENCRYPTED: 4,847</div>
+        <div style="color:#ff2244;margin-top:4px">DEMAND: 2.3 BTC</div>
+        <div style="color:#7a0018;margin-top:4px;font-size:0.6rem">SPREADING TO NETWORK...</div>
+      </div>
+    </div>
+
+    <div class="attack-log">
+      <div class="log-header">
+        <span>⚡ LIVE ATTACK LOG — CRITICAL SYSTEM ALERT</span>
+        <span id="attack-timestamp">00:00:00</span>
+      </div>
+      <div id="log-container"></div>
+    </div>
+  </div>
+
+  <div class="hero-danger">
+    <h1 id="danger-title">THE DIGITAL WORLD<br>IS UNDER ATTACK.</h1>
+    <p class="sub">// CRITICAL VULNERABILITIES DETECTED IN EVERY SYSTEM //</p>
+  </div>
+
+  <div class="scroll-hint">
+    SCROLL TO WITNESS THE DEFENSE
+    <span class="scroll-arrow">↓</span>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PHASE 2: BUILDER ZONE -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="phase2">
+  <canvas id="matrix-canvas"></canvas>
+
+  <div style="position:relative;z-index:2">
+    <p class="section-label reveal">// PHASE 02 — BUILDER ZONE</p>
+    <h2 class="phase-title reveal">Enter The <span class="accent">Developer</span></h2>
+
+    <div class="builder-grid" style="max-width:1200px;margin:0 auto">
+      <!-- Profile -->
+      <div class="profile-card reveal">
+        <div class="profile-avatar">TS</div>
+        <div class="profile-name">THAKSHA SASIKUMAR</div>
+        <div class="profile-roles">
+          <span class="role-tag">Full Stack Developer</span>
+          <span class="role-tag">Video Editor</span>
+          <span class="role-tag">Problem Solver</span>
+        </div>
+        <div class="profile-info">
+          <div class="info-row">
+            <span class="key">LOCATION</span>
+            <span>Batticaloa, Sri Lanka 🇱🇰</span>
+          </div>
+          <div class="info-row">
+            <span class="key">EMAIL</span>
+            <a href="mailto:thaksha.uki@dreamspace.academy">thaksha.uki@dreamspace.academy</a>
+          </div>
+          <div class="info-row">
+            <span class="key">GITHUB</span>
+            <a href="https://github.com/thakshauki-cpu" target="_blank">thakshauki-cpu</a>
+          </div>
+          <div class="info-row">
+            <span class="key">LINKEDIN</span>
+            <a href="https://www.linkedin.com/in/thaksha-sasikumar" target="_blank">thaksha-sasikumar</a>
+          </div>
+          <div class="info-row">
+            <span class="key">STATUS</span>
+            <span style="color:var(--green)">● Open to Opportunities</span>
+          </div>
+        </div>
+        <div style="margin-top:1.5rem;display:flex;gap:0.8rem">
+          <a href="#contact" class="btn btn-primary" style="flex:1;justify-content:center;font-size:0.6rem">✉ CONTACT</a>
+          <a href="#" class="btn btn-secondary" style="flex:1;justify-content:center;font-size:0.6rem" onclick="alert('CV download would be configured here.')">⬇ DOWNLOAD CV</a>
+        </div>
+      </div>
+
+      <!-- Code terminal -->
+      <div class="code-terminal reveal">
+        <div class="terminal-header">
+          <div class="dot red"></div>
+          <div class="dot yellow"></div>
+          <div class="dot green"></div>
+          <div class="terminal-title">thaksha.config.js</div>
+        </div>
+        <div class="terminal-body" style="line-height:1.9">
+          <div><span class="t-comment">// Thaksha Sasikumar — Developer Profile</span></div>
+          <br>
+          <div><span class="t-purple">const</span> <span class="t-cyan">developer</span> = {</div>
+          <div>&nbsp;&nbsp;<span class="t-key">name</span>: <span class="t-str">"Thaksha Sasikumar"</span>,</div>
+          <div>&nbsp;&nbsp;<span class="t-key">from</span>: <span class="t-str">"Batticaloa, Sri Lanka"</span>,</div>
+          <div>&nbsp;&nbsp;<span class="t-key">roles</span>: [</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-str">"Full Stack Developer"</span>,</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-str">"Video Editor"</span>,</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-str">"Creative Problem Solver"</span></div>
+          <div>&nbsp;&nbsp;],</div>
+          <div>&nbsp;&nbsp;<span class="t-key">mission</span>: <span class="t-str">"Build. Create. Secure."</span>,</div>
+          <div>&nbsp;&nbsp;<span class="t-key">evolving</span>: <span class="t-cyan">true</span>,</div>
+          <div>&nbsp;&nbsp;<span class="t-key">target</span>: <span class="t-str">"Cybersecurity Professional"</span></div>
+          <div>};</div>
+          <br>
+          <div><span class="t-purple">const</span> <span class="t-cyan">mission</span> = <span class="t-purple">async</span> () => {</div>
+          <div>&nbsp;&nbsp;<span class="t-purple">await</span> <span class="t-yellow">buildSecureSystems</span>();</div>
+          <div>&nbsp;&nbsp;<span class="t-purple">await</span> <span class="t-yellow">defendTheDigitalWorld</span>();</div>
+          <div>&nbsp;&nbsp;<span class="t-green">return</span> <span class="t-str">"Future Secured ✓"</span>;</div>
+          <div>}; <span class="cursor-blink"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Skills -->
+    <div class="skills-section reveal">
+      <div class="skills-title">// TECH ARSENAL</div>
+      <div class="skills-grid" id="skills-grid">
+        <!-- Generated by JS -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PHASE 3: LEARNING JOURNEY -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="phase3">
+  <p class="section-label reveal">// PHASE 03 — LEARNING JOURNEY</p>
+  <h2 class="phase-title reveal" style="color:#fff">The <span class="accent">Roadmap</span> to Mastery</h2>
+
+  <div class="roadmap" id="roadmap">
+    <div class="roadmap-item">
+      <div class="month-badge">MONTH 01</div>
+      <div class="roadmap-node done">✓</div>
+      <div class="roadmap-content done">
+        <div class="rm-month done">COMPLETED ✓</div>
+        <div class="rm-topics">HTML & CSS</div>
+        <div style="font-family:var(--font-mono);font-size:0.65rem;color:rgba(0,255,136,0.5)">Foundations of the web — structure and style</div>
+        <div class="progress-bar"><div class="progress-fill" data-width="100"></div></div>
+      </div>
+    </div>
+
+    <div class="roadmap-item">
+      <div class="month-badge">MONTH 02</div>
+      <div class="roadmap-node active">⏳</div>
+      <div class="roadmap-content active">
+        <div class="rm-month" style="color:var(--blue)">IN PROGRESS ⏳</div>
+        <div class="rm-topics">Advanced CSS · Portfolio Development</div>
+        <div style="font-family:var(--font-mono);font-size:0.65rem;color:rgba(0,170,255,0.5)">Mastering layouts, animations, and design systems</div>
+        <div class="progress-bar"><div class="progress-fill blue" data-width="60"></div></div>
+      </div>
+    </div>
+
+    <div class="roadmap-item">
+      <div class="month-badge">MONTH 03</div>
+      <div class="roadmap-node upcoming">🎯</div>
+      <div class="roadmap-content">
+        <div class="rm-month" style="color:rgba(200,200,255,0.4)">UPCOMING 🎯</div>
+        <div class="rm-topics" style="color:rgba(200,220,255,0.5)">JavaScript</div>
+        <div style="font-family:var(--font-mono);font-size:0.65rem;color:rgba(150,150,200,0.4)">Dynamic interactions and programming logic</div>
+        <div class="progress-bar"><div class="progress-fill blue" data-width="0"></div></div>
+      </div>
+    </div>
+
+    <div class="roadmap-item">
+      <div class="month-badge">MONTH 04</div>
+      <div class="roadmap-node upcoming">🎯</div>
+      <div class="roadmap-content">
+        <div class="rm-month" style="color:rgba(200,200,255,0.4)">UPCOMING 🎯</div>
+        <div class="rm-topics" style="color:rgba(200,220,255,0.5)">React.js</div>
+        <div style="font-family:var(--font-mono);font-size:0.65rem;color:rgba(150,150,200,0.4)">Component-driven UI architecture</div>
+        <div class="progress-bar"><div class="progress-fill blue" data-width="0"></div></div>
+      </div>
+    </div>
+
+    <div class="roadmap-item">
+      <div class="month-badge">MONTH 05</div>
+      <div class="roadmap-node upcoming">🎯</div>
+      <div class="roadmap-content">
+        <div class="rm-month" style="color:rgba(200,200,255,0.4)">UPCOMING 🎯</div>
+        <div class="rm-topics" style="color:rgba(200,220,255,0.5)">Node.js & Express.js</div>
+        <div style="font-family:var(--font-mono);font-size:0.65rem;color:rgba(150,150,200,0.4)">Server-side development and REST APIs</div>
+        <div class="progress-bar"><div class="progress-fill blue" data-width="0"></div></div>
+      </div>
+    </div>
+
+    <div class="roadmap-item">
+      <div class="month-badge">MONTH 06</div>
+      <div class="roadmap-node upcoming">🎯</div>
+      <div class="roadmap-content">
+        <div class="rm-month" style="color:rgba(200,200,255,0.4)">UPCOMING 🎯</div>
+        <div class="rm-topics" style="color:rgba(200,220,255,0.5)">MongoDB & MERN Project</div>
+        <div style="font-family:var(--font-mono);font-size:0.65rem;color:rgba(150,150,200,0.4)">Full-stack application — real-world deployment</div>
+        <div class="progress-bar"><div class="progress-fill" data-width="0"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PHASE 4: CREATOR ZONE -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="phase4">
+  <p class="section-label reveal">// PHASE 04 — CREATOR ZONE</p>
+  <h2 class="phase-title reveal" style="color:#fff">The <span style="color:var(--purple);text-shadow:0 0 30px var(--purple)">Creative</span> Mind</h2>
+
+  <div class="creator-grid" style="max-width:1200px;margin:0 auto">
+    <!-- Timeline editor -->
+    <div class="timeline-editor reveal">
+      <div class="tl-header">
+        <div class="dot red"></div>
+        <div class="dot yellow"></div>
+        <div class="dot green"></div>
+        <div class="tl-title">CapCut — Project_Thaksha_Final.ccproj</div>
+      </div>
+      <div class="tl-body" id="tl-body">
+        <!-- Generated by JS -->
+      </div>
+    </div>
+
+    <!-- Creator skills -->
+    <div class="creator-skills reveal">
+      <div style="font-family:var(--font-display);font-size:1rem;color:var(--purple);letter-spacing:0.2em;margin-bottom:1.5rem;text-shadow:0 0 20px var(--purple)">// VIDEO EDITING SKILLS</div>
+      <div class="creator-skill-item">
+        <div class="cs-icon">🎬</div>
+        <div class="cs-info">
+          <div class="cs-name">Content Creation</div>
+          <div class="cs-desc">SHORT_FORM_VIDEO // REELS // YOUTUBE</div>
+        </div>
+      </div>
+      <div class="creator-skill-item">
+        <div class="cs-icon">📖</div>
+        <div class="cs-info">
+          <div class="cs-name">Storytelling</div>
+          <div class="cs-desc">VISUAL_NARRATIVE // EMOTION // IMPACT</div>
+        </div>
+      </div>
+      <div class="creator-skill-item">
+        <div class="cs-icon">✂️</div>
+        <div class="cs-info">
+          <div class="cs-name">Creative Editing</div>
+          <div class="cs-desc">CAPCUT // TRANSITIONS // EFFECTS</div>
+        </div>
+      </div>
+      <div class="creator-skill-item">
+        <div class="cs-icon">📱</div>
+        <div class="cs-info">
+          <div class="cs-name">Social Media Content</div>
+          <div class="cs-desc">INSTAGRAM // TIKTOK // LINKEDIN</div>
+        </div>
+      </div>
+
+      <div style="margin-top:1.5rem;background:rgba(157,0,255,0.06);border:1px solid rgba(157,0,255,0.2);border-radius:10px;padding:1rem;font-family:var(--font-mono);font-size:0.65rem">
+        <div style="color:var(--purple);margin-bottom:0.5rem">// CAPCUT PROFICIENCY</div>
+        <div id="capcut-skills"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PHASE 5: CYBERSECURITY AWAKENING -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="phase5">
+  <canvas id="awakening-canvas"></canvas>
+
+  <div class="awakening-center">
+    <p class="section-label reveal" style="color:var(--neon-green)">// PHASE 05 — CYBERSECURITY AWAKENING</p>
+
+    <div class="awakening-quote reveal">
+      <div class="aq-line1">Every vulnerable system</div>
+      <div class="aq-line2">starts with code.</div>
+      <div class="aq-line3">Every secure system<br>starts with a developer.</div>
+    </div>
+
+    <p class="reveal" style="font-family:var(--font-mono);font-size:0.8rem;color:rgba(200,255,200,0.5);letter-spacing:0.1em;margin-bottom:2rem">
+      // The same hands that build can also defend. //
+    </p>
+
+    <div class="security-concepts reveal">
+      <div class="sec-concept">
+        <div class="sec-icon">🔐</div>
+        <div class="sec-name">Secure Coding</div>
+      </div>
+      <div class="sec-concept">
+        <div class="sec-icon">🛡️</div>
+        <div class="sec-name">Authentication</div>
+      </div>
+      <div class="sec-concept">
+        <div class="sec-icon">🔒</div>
+        <div class="sec-name">Data Protection</div>
+      </div>
+      <div class="sec-concept">
+        <div class="sec-icon">🌐</div>
+        <div class="sec-name">Network Security</div>
+      </div>
+      <div class="sec-concept">
+        <div class="sec-icon">🚨</div>
+        <div class="sec-name">Threat Detection</div>
+      </div>
+    </div>
+
+    <!-- Evolution bar -->
+    <div style="margin-top:4rem;max-width:600px;margin-left:auto;margin-right:auto;margin-top:3rem" class="reveal">
+      <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.1em;margin-bottom:0.5rem">
+        <span style="color:var(--blue)">DEVELOPER</span>
+        <span style="color:var(--neon-green)">CYBER DEFENDER</span>
+      </div>
+      <div style="height:6px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden">
+        <div id="evo-bar" style="height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--neon-green));border-radius:3px;transition:width 2s ease;box-shadow:0 0 20px var(--cyan)"></div>
+      </div>
+      <div style="text-align:center;font-family:var(--font-mono);font-size:0.65rem;color:rgba(0,255,136,0.5);margin-top:0.5rem">
+        EVOLUTION IN PROGRESS — 35%
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PHASE 6: CYBER DEFENSE -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="phase6">
+  <canvas id="secure-canvas"></canvas>
+
+  <div style="position:relative;z-index:2">
+    <p class="section-label reveal" style="color:var(--green)">// PHASE 06 — CYBER DEFENSE ZONE</p>
+    <h2 class="phase-title reveal" style="color:#fff">The World Is Now <span style="color:var(--neon-green);text-shadow:0 0 30px var(--neon-green)">Secured.</span></h2>
+
+    <!-- Defense cards -->
+    <div class="defense-grid" style="max-width:1200px;margin:0 auto 3rem">
+      <div class="defense-card reveal">
+        <div class="dc-status"><div class="dc-dot"></div>SERVERS PROTECTED</div>
+        <div class="dc-title">Active Firewalls</div>
+        <div class="dc-value" id="fw-count">247</div>
+      </div>
+      <div class="defense-card reveal">
+        <div class="dc-status"><div class="dc-dot"></div>THREATS NEUTRALIZED</div>
+        <div class="dc-title">Attacks Blocked</div>
+        <div class="dc-value" id="attack-count">0</div>
+      </div>
+      <div class="defense-card reveal">
+        <div class="dc-status"><div class="dc-dot"></div>SYSTEM STATUS</div>
+        <div class="dc-title">Security Score</div>
+        <div class="dc-value">98.7%</div>
+      </div>
+    </div>
+
+    <!-- Firewall terminal -->
+    <div class="firewall-vis reveal" style="max-width:1200px;margin:0 auto 4rem">
+      <div class="fw-header">
+        <span>🛡 FIREWALL ACTIVITY LOG — REAL-TIME DEFENSE</span>
+        <span style="color:var(--green);animation:blink 2s infinite">● ACTIVE</span>
+      </div>
+      <div id="fw-log"></div>
+    </div>
+
+    <!-- Final identity -->
+    <div class="final-identity">
+      <div class="fi-tagline">// FINAL IDENTITY UNLOCKED</div>
+      <div class="fi-name reveal">THAKSHA<br>SASIKUMAR</div>
+      <div class="fi-roles reveal">Full Stack Developer · Future Cybersecurity Professional</div>
+      <div class="build-defend reveal">
+        <span>"Building</span> Today.<br>
+        <span>Defending</span> Tomorrow."
+      </div>
+      <div class="fi-ccc reveal">CODE. CREATE. SECURE.</div>
+      <div class="cta-row">
+        <a href="https://github.com/thakshauki-cpu" target="_blank" class="btn btn-primary">⬡ GITHUB PROFILE</a>
+        <a href="https://www.linkedin.com/in/thaksha-sasikumar" target="_blank" class="btn btn-secondary">◎ LINKEDIN</a>
+        <a href="#contact" class="btn btn-primary" style="border-color:var(--neon-green);color:var(--neon-green)">✉ CONTACT ME</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- INTERACTIVE TERMINAL -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="terminal-section">
+  <p class="section-label" style="color:var(--green)">// INTERACTIVE TERMINAL</p>
+  <div style="text-align:center;font-family:var(--font-mono);font-size:0.7rem;color:rgba(0,255,136,0.5);margin-bottom:1.5rem">
+    Type "help" to see available commands
+  </div>
+  <div class="interactive-terminal">
+    <div class="it-header">
+      <div class="dot red"></div>
+      <div class="dot yellow"></div>
+      <div class="dot green"></div>
+      <div class="it-title">thaksha@cyberdef:~$</div>
+    </div>
+    <div class="it-body" id="it-output">
+      <div class="it-output" style="color:var(--cyan)">Welcome to Thaksha's secure terminal. v1.0.0</div>
+      <div class="it-output" style="color:rgba(0,255,136,0.5)">Type "help" to get started.</div>
+    </div>
+    <div class="it-input-row">
+      <span class="it-prompt">thaksha@cyberdef:~$</span>
+      <input class="it-input" id="it-input" type="text" autocomplete="off" spellcheck="false" placeholder="_">
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- CONTACT -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="contact">
+  <p class="section-label">// ESTABLISH CONNECTION</p>
+  <h2 class="phase-title" style="color:#fff">Initiate <span class="accent">Contact</span></h2>
+  <div class="contact-container">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+      <div class="form-group">
+        <label class="form-label">YOUR NAME</label>
+        <input class="form-input" type="text" placeholder="John Doe">
+      </div>
+      <div class="form-group">
+        <label class="form-label">EMAIL ADDRESS</label>
+        <input class="form-input" type="email" placeholder="you@example.com">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">SUBJECT</label>
+      <input class="form-input" type="text" placeholder="Let's collaborate...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">MESSAGE</label>
+      <textarea class="form-textarea" placeholder="Tell me about your project or opportunity..."></textarea>
+    </div>
+    <div style="display:flex;justify-content:center">
+      <button class="btn btn-secondary" onclick="handleContact()" style="font-size:0.75rem;padding:1rem 3rem">
+        ⟶ SEND SECURE MESSAGE
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  &copy; 2025 THAKSHA SASIKUMAR · CODE.CREATE.SECURE · BATTICALOA, SRI LANKA
+</footer>
+
+<script>
+// ══════════════════════════════════════════
+// CURSOR
+// ══════════════════════════════════════════
+const cursor = document.getElementById('cursor');
+const cursorRing = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px';
+  cursor.style.top = my + 'px';
+});
+
+setInterval(() => {
+  rx += (mx - rx) * 0.15;
+  ry += (my - ry) * 0.15;
+  cursorRing.style.left = rx + 'px';
+  cursorRing.style.top = ry + 'px';
+}, 16);
+
+// ══════════════════════════════════════════
+// SCROLL PROGRESS
+// ══════════════════════════════════════════
+window.addEventListener('scroll', () => {
+  const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+  document.getElementById('scroll-progress').style.width = pct + '%';
+});
+
+// ══════════════════════════════════════════
+// PHASE 1 CANVAS - PARTICLE ATTACKS
+// ══════════════════════════════════════════
+const dangerCanvas = document.getElementById('danger-canvas');
+const dctx = dangerCanvas.getContext('2d');
+let dParticles = [];
+
+function resizeDanger() {
+  dangerCanvas.width = dangerCanvas.offsetWidth;
+  dangerCanvas.height = dangerCanvas.offsetHeight;
+}
+resizeDanger();
+window.addEventListener('resize', resizeDanger);
+
+class DangerParticle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * dangerCanvas.width;
+    this.y = Math.random() * dangerCanvas.height;
+    this.vx = (Math.random() - 0.5) * 3;
+    this.vy = Math.random() * 2 + 0.5;
+    this.size = Math.random() * 2 + 0.5;
+    this.life = 1;
+    this.decay = Math.random() * 0.01 + 0.005;
+    this.type = Math.random() > 0.5 ? 'data' : 'attack';
+    this.color = this.type === 'data' ? `rgba(255,${Math.floor(Math.random()*50)},50,` : `rgba(255,${Math.floor(Math.random()*100+100)},0,`;
+  }
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    this.life -= this.decay;
+    if (this.life <= 0 || this.y > dangerCanvas.height) this.reset();
+  }
+  draw() {
+    dctx.beginPath();
+    dctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    dctx.fillStyle = this.color + this.life + ')';
+    dctx.fill();
+    // Trail
+    dctx.strokeStyle = this.color + (this.life * 0.3) + ')';
+    dctx.lineWidth = 0.5;
+    dctx.beginPath();
+    dctx.moveTo(this.x, this.y);
+    dctx.lineTo(this.x - this.vx * 5, this.y - this.vy * 5);
+    dctx.stroke();
+  }
+}
+
+// Create connection lines (attack paths)
+class AttackLine {
+  constructor() { this.reset(); }
+  reset() {
+    this.x1 = Math.random() * dangerCanvas.width;
+    this.y1 = 0;
+    this.x2 = Math.random() * dangerCanvas.width;
+    this.y2 = dangerCanvas.height;
+    this.progress = 0;
+    this.speed = Math.random() * 0.005 + 0.002;
+    this.opacity = 0;
+    this.done = false;
+  }
+  update() {
+    this.progress += this.speed;
+    this.opacity = Math.sin(this.progress * Math.PI);
+    if (this.progress > 1) this.reset();
+  }
+  draw() {
+    const cx = this.x1 + (this.x2 - this.x1) * this.progress;
+    const cy = this.y1 + (this.y2 - this.y1) * this.progress;
+    dctx.beginPath();
+    dctx.moveTo(this.x1, this.y1);
+    dctx.lineTo(cx, cy);
+    dctx.strokeStyle = `rgba(255,0,51,${this.opacity * 0.3})`;
+    dctx.lineWidth = 0.5;
+    dctx.stroke();
+    dctx.beginPath();
+    dctx.arc(cx, cy, 3, 0, Math.PI * 2);
+    dctx.fillStyle = `rgba(255,0,51,${this.opacity})`;
+    dctx.fill();
+    dctx.shadowBlur = 10;
+    dctx.shadowColor = '#ff0033';
+    dctx.fill();
+    dctx.shadowBlur = 0;
+  }
+}
+
+for (let i = 0; i < 150; i++) dParticles.push(new DangerParticle());
+const attackLines = Array.from({length: 15}, () => new AttackLine());
+
+function animateDanger() {
+  dctx.fillStyle = 'rgba(0,0,0,0.05)';
+  dctx.fillRect(0, 0, dangerCanvas.width, dangerCanvas.height);
+  dParticles.forEach(p => { p.update(); p.draw(); });
+  attackLines.forEach(l => { l.update(); l.draw(); });
+  requestAnimationFrame(animateDanger);
+}
+animateDanger();
+
+// ══════════════════════════════════════════
+// ATTACK LOG
+// ══════════════════════════════════════════
+const attackMessages = [
+  { text: '[CRITICAL] SQL injection detected on /api/users', cls: 'critical' },
+  { text: '[WARN] Brute force attempt: 192.168.1.45 — 847 tries', cls: 'warn' },
+  { text: '[BREACH] Unauthorized root access: db-server-01', cls: 'critical' },
+  { text: '[INFO] Port scan detected from 10.0.0.89', cls: '' },
+  { text: '[CRITICAL] XSS payload injected into form field', cls: 'critical' },
+  { text: '[WARN] SSL certificate expired — 3 servers affected', cls: 'warn' },
+  { text: '[BREACH] Data exfiltration via DNS tunneling', cls: 'critical' },
+  { text: '[INFO] 45,892 login attempts in last 60 seconds', cls: 'warn' },
+  { text: '[CRITICAL] Zero-day exploit deployed on port 443', cls: 'critical' },
+  { text: '[WARN] Ransomware spreading — file encryption: 73%', cls: 'warn' },
+  { text: '[BREACH] Admin credentials dumped from memory', cls: 'critical' },
+  { text: '[INFO] Botnet C2 communication on port 8080', cls: '' },
+];
+
+let logIdx = 0;
+const logContainer = document.getElementById('log-container');
+function addLog() {
+  const msg = attackMessages[logIdx % attackMessages.length];
+  const div = document.createElement('div');
+  div.className = 'log-line ' + msg.cls;
+  const ts = new Date().toLocaleTimeString('en-GB');
+  div.textContent = `[${ts}] ${msg.text}`;
+  logContainer.appendChild(div);
+  if (logContainer.children.length > 8) logContainer.removeChild(logContainer.firstChild);
+  logIdx++;
+}
+setInterval(addLog, 1200);
+
+// Timestamp
+setInterval(() => {
+  document.getElementById('attack-timestamp').textContent = new Date().toLocaleTimeString('en-GB');
+}, 1000);
+
+// ══════════════════════════════════════════
+// MATRIX CANVAS (Phase 2)
+// ══════════════════════════════════════════
+const matrixCanvas = document.getElementById('matrix-canvas');
+const mctx = matrixCanvas.getContext('2d');
+function resizeMatrix() {
+  matrixCanvas.width = matrixCanvas.offsetWidth;
+  matrixCanvas.height = matrixCanvas.offsetHeight;
+}
+resizeMatrix();
+
+const matrixChars = '01ABCDEF0110SECURE';
+const fontSize = 12;
+let columns = Math.floor(matrixCanvas.width / fontSize);
+const drops = Array(columns).fill(1);
+
+function animateMatrix() {
+  mctx.fillStyle = 'rgba(0,0,0,0.04)';
+  mctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+  mctx.fillStyle = '#00aaff';
+  mctx.font = fontSize + 'px Share Tech Mono';
+  drops.forEach((y, i) => {
+    const char = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+    mctx.fillStyle = i % 3 === 0 ? 'rgba(0,255,255,0.3)' : 'rgba(0,170,255,0.15)';
+    mctx.fillText(char, i * fontSize, y * fontSize);
+    if (y * fontSize > matrixCanvas.height && Math.random() > 0.975) drops[i] = 0;
+    drops[i]++;
+  });
+  requestAnimationFrame(animateMatrix);
+}
+animateMatrix();
+
+// ══════════════════════════════════════════
+// SKILLS GRID
+// ══════════════════════════════════════════
+const skills = [
+  { name: 'HTML', icon: '🌐', level: 85 },
+  { name: 'CSS', icon: '🎨', level: 80 },
+  { name: 'JavaScript', icon: '⚡', level: 60 },
+  { name: 'React', icon: '⚛', level: 40 },
+  { name: 'Node.js', icon: '🟢', level: 35 },
+  { name: 'Express', icon: '🚂', level: 30 },
+  { name: 'MongoDB', icon: '🍃', level: 30 },
+  { name: 'Git', icon: '🔀', level: 70 },
+  { name: 'GitHub', icon: '🐙', level: 70 },
+  { name: 'CapCut', icon: '🎬', level: 90 },
+];
+const grid = document.getElementById('skills-grid');
+skills.forEach(s => {
+  grid.innerHTML += `
+    <div class="skill-orb">
+      <div class="skill-icon">${s.icon}</div>
+      <div class="skill-name">${s.name}</div>
+      <div class="skill-level"><div class="skill-fill" data-width="${s.level}" style="width:0"></div></div>
+    </div>`;
+});
+
+// ══════════════════════════════════════════
+// CAPCUT SKILLS
+// ══════════════════════════════════════════
+const capcutSkills = ['Color Grading','Transitions','Motion Graphics','Audio Sync','Text Animation'];
+const ccEl = document.getElementById('capcut-skills');
+capcutSkills.forEach(sk => {
+  ccEl.innerHTML += `<div style="display:flex;justify-content:space-between;margin:0.4rem 0;color:rgba(200,180,255,0.6)">
+    <span>${sk}</span>
+    <span style="color:var(--purple)">${'█'.repeat(Math.floor(Math.random()*3)+7)}${'░'.repeat(3)}</span>
+  </div>`;
+});
+
+// ══════════════════════════════════════════
+// TIMELINE EDITOR
+// ══════════════════════════════════════════
+const tracks = [
+  { name: 'VIDEO 1', clips: [{w:80,color:'#9d00ff'},{w:50,color:'#7700cc'},{w:90,color:'#6600bb'},{w:40,color:'#9900ee'}] },
+  { name: 'AUDIO', clips: [{w:200,color:'#4400aa'},{w:60,color:'#330099'}] },
+  { name: 'TEXT FX', clips: [{w:40,color:'#cc00ff'},{w:60,color:'#aa00dd'},{w:30,color:'#cc00ff'}] },
+  { name: 'EFFECTS', clips: [{w:120,color:'#5500bb'},{w:80,color:'#7700dd'}] },
+];
+const tlBody = document.getElementById('tl-body');
+tracks.forEach(t => {
+  const row = document.createElement('div');
+  row.className = 'tl-track';
+  row.innerHTML = `<div class="tl-track-name">${t.name}</div>
+    <div class="tl-clips">${t.clips.map(c => `<div class="tl-clip" style="width:${c.w}px;background:${c.color};flex-shrink:0"></div>`).join('')}</div>`;
+  tlBody.appendChild(row);
+});
+
+// Timeline playhead
+let playhead = 0;
+setInterval(() => {
+  playhead = (playhead + 1) % 300;
+  tlBody.style.backgroundImage = `linear-gradient(90deg, transparent ${playhead + 48}px, rgba(255,255,0,0.15) ${playhead + 49}px, rgba(255,255,0,0.15) ${playhead + 50}px, transparent ${playhead + 51}px)`;
+}, 50);
+
+// ══════════════════════════════════════════
+// AWAKENING CANVAS
+// ══════════════════════════════════════════
+const awCanvas = document.getElementById('awakening-canvas');
+const awCtx = awCanvas.getContext('2d');
+function resizeAw() {
+  awCanvas.width = awCanvas.offsetWidth;
+  awCanvas.height = awCanvas.offsetHeight;
+}
+resizeAw();
+
+class AwParticle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * awCanvas.width;
+    this.y = Math.random() * awCanvas.height;
+    this.vx = (Math.random() - 0.5) * 1;
+    this.vy = (Math.random() - 0.5) * 1;
+    this.size = Math.random() * 1.5 + 0.5;
+    this.life = Math.random();
+    this.maxLife = Math.random() * 0.5 + 0.3;
+  }
+  update() {
+    this.x += this.vx; this.y += this.vy;
+    this.life += 0.003;
+    if (this.life > this.maxLife) this.reset();
+  }
+  draw() {
+    const a = Math.sin((this.life / this.maxLife) * Math.PI) * 0.4;
+    const t = this.life / this.maxLife;
+    const r = Math.floor(t * 57);
+    const g = Math.floor(255 * (0.3 + t * 0.7));
+    const b = Math.floor(255 * (1 - t * 0.7));
+    awCtx.beginPath();
+    awCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    awCtx.fillStyle = `rgba(${r},${g},${b},${a})`;
+    awCtx.fill();
+  }
+}
+const awParticles = Array.from({length: 200}, () => new AwParticle());
+function animateAw() {
+  awCtx.clearRect(0, 0, awCanvas.width, awCanvas.height);
+  awParticles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(animateAw);
+}
+animateAw();
+
+// ══════════════════════════════════════════
+// SECURE CANVAS
+// ══════════════════════════════════════════
+const secCanvas = document.getElementById('secure-canvas');
+const sctx = secCanvas.getContext('2d');
+function resizeSec() {
+  secCanvas.width = secCanvas.offsetWidth;
+  secCanvas.height = secCanvas.offsetHeight;
+}
+resizeSec();
+
+class SecParticle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * secCanvas.width;
+    this.y = secCanvas.height + 10;
+    this.vx = (Math.random()-0.5) * 0.5;
+    this.vy = -(Math.random() * 1 + 0.3);
+    this.size = Math.random() * 2 + 0.5;
+    this.life = 1;
+    this.decay = Math.random() * 0.008 + 0.003;
+  }
+  update() {
+    this.x += this.vx; this.y += this.vy;
+    this.life -= this.decay;
+    if (this.life <= 0) this.reset();
+  }
+  draw() {
+    sctx.beginPath();
+    sctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    sctx.fillStyle = `rgba(0,255,136,${this.life * 0.4})`;
+    sctx.fill();
+    sctx.shadowBlur = 5;
+    sctx.shadowColor = '#00ff88';
+    sctx.fill();
+    sctx.shadowBlur = 0;
+  }
+}
+const secParticles = Array.from({length: 80}, () => new SecParticle());
+function animateSec() {
+  sctx.clearRect(0, 0, secCanvas.width, secCanvas.height);
+  secParticles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(animateSec);
+}
+animateSec();
+
+// ══════════════════════════════════════════
+// FIREWALL LOG
+// ══════════════════════════════════════════
+const fwMessages = [
+  { text: '[BLOCKED] DDoS attack from 185.220.101.x — 45,000 req/s', cls: 'fw-blocked' },
+  { text: '[BLOCKED] SQL injection attempt on /api/login', cls: 'fw-blocked' },
+  { text: '[ALLOW] Authenticated request: user_id=2847', cls: 'fw-allow' },
+  { text: '[BLOCKED] XSS payload detected and sanitized', cls: 'fw-blocked' },
+  { text: '[ALLOW] Secure HTTPS connection established', cls: 'fw-allow' },
+  { text: '[BLOCKED] Brute force: IP 192.168.99.1 banned (30 min)', cls: 'fw-blocked' },
+  { text: '[ALLOW] JWT token validated successfully', cls: 'fw-allow' },
+  { text: '[BLOCKED] Port scan detected — 443 honeypot triggered', cls: 'fw-blocked' },
+  { text: '[ALLOW] 2FA verification passed: user authenticated', cls: 'fw-allow' },
+];
+let fwIdx = 0;
+const fwLog = document.getElementById('fw-log');
+let blockedCount = 0;
+
+function addFwLog() {
+  const msg = fwMessages[fwIdx % fwMessages.length];
+  const div = document.createElement('div');
+  div.className = 'fw-line ' + msg.cls;
+  const ts = new Date().toLocaleTimeString('en-GB');
+  div.textContent = `[${ts}] ${msg.text}`;
+  fwLog.appendChild(div);
+  if (fwLog.children.length > 8) fwLog.removeChild(fwLog.firstChild);
+  if (msg.cls === 'fw-blocked') {
+    blockedCount++;
+    const el = document.getElementById('attack-count');
+    if (el) el.textContent = blockedCount.toLocaleString();
+  }
+  fwIdx++;
+}
+setInterval(addFwLog, 1500);
+
+// Counter animation
+function animateCounter(el, target, duration=2000) {
+  if (!el) return;
+  let start = 0;
+  const step = target / (duration / 16);
+  const interval = setInterval(() => {
+    start = Math.min(start + step, target);
+    el.textContent = Math.floor(start).toLocaleString();
+    if (start >= target) clearInterval(interval);
+  }, 16);
+}
+
+// ══════════════════════════════════════════
+// SCROLL OBSERVER
+// ══════════════════════════════════════════
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+
+      // Animate skill fills
+      entry.target.querySelectorAll('.skill-fill[data-width]').forEach(el => {
+        setTimeout(() => el.style.width = el.dataset.width + '%', 200);
+      });
+
+      // Animate progress bars
+      entry.target.querySelectorAll('.progress-fill[data-width]').forEach(el => {
+        setTimeout(() => el.style.width = el.dataset.width + '%', 300);
+      });
+
+      // Trigger evolution bar
+      if (entry.target.id === 'phase5' || entry.target.closest('#phase5')) {
+        setTimeout(() => {
+          const evo = document.getElementById('evo-bar');
+          if (evo) evo.style.width = '35%';
+        }, 500);
+      }
+
+      // Trigger counters in phase6
+      if (entry.target.id === 'phase6' || entry.target.closest('#phase6')) {
+        setTimeout(() => {
+          animateCounter(document.getElementById('fw-count'), 247);
+        }, 400);
+      }
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal, #phase5, #phase6').forEach(el => observer.observe(el));
+document.querySelectorAll('.roadmap-item').forEach(el => observer.observe(el));
+
+// ══════════════════════════════════════════
+// NAV STATUS TRANSITION
+// ══════════════════════════════════════════
+const phase6 = document.getElementById('phase6');
+const navDot = document.getElementById('nav-status-dot');
+const navText = document.getElementById('nav-status-text');
+
+const statusObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navDot.classList.add('secure');
+      navText.textContent = 'SYSTEM SECURED';
+      navText.style.color = 'var(--green)';
+    } else {
+      navDot.classList.remove('secure');
+      navText.textContent = 'BREACH DETECTED';
+      navText.style.color = 'var(--red)';
+    }
+  });
+}, { threshold: 0.3 });
+statusObserver.observe(phase6);
+
+// ══════════════════════════════════════════
+// INTERACTIVE TERMINAL
+// ══════════════════════════════════════════
+const itInput = document.getElementById('it-input');
+const itOutput = document.getElementById('it-output');
+
+const terminalCommands = {
+  help: () => `
+Available commands:
+  about        — Who is Thaksha?
+  skills       — Technical skills
+  journey      — Learning roadmap
+  contact      — Contact info
+  github       — GitHub profile
+  mission      — The mission
+  status       — System status
+  clear        — Clear terminal`,
+
+  about: () => `
+THAKSHA SASIKUMAR
+━━━━━━━━━━━━━━━━
+Location : Batticaloa, Sri Lanka
+Roles    : Full Stack Developer | Video Editor | Creative Problem Solver
+Mission  : Building secure digital systems
+Evolution: Developer → Cybersecurity Professional`,
+
+  skills: () => `
+TECHNICAL SKILLS
+━━━━━━━━━━━━━━━━
+[████████░] HTML          85%
+[████████░] CSS           80%
+[██████░░░] JavaScript    60%
+[████░░░░░] React         40%
+[███░░░░░░] Node.js       35%
+[███░░░░░░] Express.js    30%
+[███░░░░░░] MongoDB       30%
+[███████░░] Git/GitHub    70%
+[█████████] CapCut        90%`,
+
+  journey: () => `
+LEARNING ROADMAP
+━━━━━━━━━━━━━━━━
+Month 1  [✓ DONE    ] HTML & CSS
+Month 2  [⏳ ACTIVE ] Advanced CSS + Portfolio
+Month 3  [🎯 NEXT   ] JavaScript
+Month 4  [🎯 PLANNED] React.js
+Month 5  [🎯 PLANNED] Node.js + Express.js
+Month 6  [🎯 PLANNED] MongoDB + MERN Project`,
+
+  contact: () => `
+CONTACT INFORMATION
+━━━━━━━━━━━━━━━━
+Email    : thaksha.uki@dreamspace.academy
+GitHub   : github.com/thakshauki-cpu
+LinkedIn : linkedin.com/in/thaksha-sasikumar
+Location : Batticaloa, Sri Lanka`,
+
+  github: () => `Opening GitHub profile...
+→ https://github.com/thakshauki-cpu`,
+
+  mission: () => `
+MISSION STATEMENT
+━━━━━━━━━━━━━━━━
+"The same hands that build can also defend.
+Every line of code is a step toward security.
+Every system built is a future system protected."
+
+Current Phase  : Developer
+Target Phase   : Cybersecurity Professional
+Tagline        : CODE. CREATE. SECURE.`,
+
+  status: () => `
+SYSTEM STATUS
+━━━━━━━━━━━━━━━━
+[●] Firewall      : ACTIVE
+[●] Encryption    : AES-256
+[●] Auth System   : ONLINE
+[●] Monitoring    : LIVE
+[●] Threats Today : ${blockedCount} BLOCKED
+[●] System Score  : 98.7%
+Status: ██████████ SECURE`,
+
+  clear: () => null,
+};
+
+itInput.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const cmd = itInput.value.trim().toLowerCase();
+  itInput.value = '';
+  if (!cmd) return;
+
+  const cmdLine = document.createElement('div');
+  cmdLine.className = 'it-output';
+  cmdLine.style.color = 'var(--cyan)';
+  cmdLine.textContent = `thaksha@cyberdef:~$ ${cmd}`;
+  itOutput.appendChild(cmdLine);
+
+  if (cmd === 'clear') {
+    itOutput.innerHTML = '<div class="it-output" style="color:var(--cyan)">Terminal cleared.</div>';
+    return;
+  }
+
+  if (cmd === 'github') {
+    window.open('https://github.com/thakshauki-cpu', '_blank');
+  }
+
+  const handler = terminalCommands[cmd];
+  const response = handler ? handler() : `Command not found: '${cmd}'. Type 'help' for commands.`;
+
+  if (response) {
+    response.split('\n').forEach((line, i) => {
+      setTimeout(() => {
+        const out = document.createElement('div');
+        out.className = 'it-output';
+        out.style.color = line.includes('✓') ? 'var(--green)' :
+                          line.includes('⏳') ? 'var(--blue)' :
+                          line.includes('●') ? 'var(--green)' :
+                          line.includes('not found') ? 'var(--red)' :
+                          'rgba(0,255,136,0.7)';
+        out.textContent = line;
+        itOutput.appendChild(out);
+        itOutput.scrollTop = itOutput.scrollHeight;
+      }, i * 30);
+    });
+  }
+  itOutput.scrollTop = itOutput.scrollHeight;
+});
+
+// ══════════════════════════════════════════
+// CONTACT FORM
+// ══════════════════════════════════════════
+function handleContact() {
+  const btn = event.target;
+  btn.textContent = '✓ MESSAGE SENT SECURELY';
+  btn.style.background = 'rgba(0,255,136,0.2)';
+  btn.style.borderColor = 'var(--green)';
+  btn.style.color = 'var(--green)';
+  setTimeout(() => {
+    btn.textContent = '⟶ SEND SECURE MESSAGE';
+    btn.style.background = 'rgba(0,255,136,0.1)';
+    btn.style.borderColor = 'var(--green)';
+    btn.style.color = 'var(--green)';
+  }, 3000);
+}
+
+// ══════════════════════════════════════════
+// GLITCH EFFECT (periodic)
+// ══════════════════════════════════════════
+function triggerGlitch() {
+  const phase1Visible = window.scrollY < window.innerHeight * 1.5;
+  if (!phase1Visible) return;
+  const overlay = document.getElementById('glitch-overlay');
+  overlay.innerHTML = Array.from({length: 5}, () =>
+    `<div class="glitch-stripe" style="top:${Math.random()*100}%;animation-delay:${Math.random()*0.2}s"></div>`
+  ).join('');
+  overlay.classList.add('active');
+  setTimeout(() => overlay.classList.remove('active'), 200);
+}
+setInterval(triggerGlitch, 3000);
+
+// Title glitch text
+const titles = [
+  'THE DIGITAL WORLD<br>IS UNDER ATTACK.',
+  'SYSTEMS COMPROMISED.<br>DATA BREACHED.',
+  'FIREWALL BYPASSED.<br>DEFENSES FAILING.',
+  'THE DIGITAL WORLD<br>IS UNDER ATTACK.',
+];
+let titleIdx = 0;
+setInterval(() => {
+  if (window.scrollY < window.innerHeight) {
+    titleIdx = (titleIdx + 1) % titles.length;
+    document.getElementById('danger-title').innerHTML = titles[titleIdx];
+  }
+}, 4000);
+
+// Initialize all fills after load
+window.addEventListener('load', () => {
+  // They'll animate when scrolled into view via observer
+});
+</script>
+</body>
+</html>
